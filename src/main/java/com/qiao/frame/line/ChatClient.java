@@ -1,10 +1,12 @@
-package com.qiao.frame.fixedlength;
+package com.qiao.frame.line;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.CharsetUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,18 +42,13 @@ public class ChatClient {
             Channel channel = bootstrap.connect().channel();
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Start-" + System.getProperty("line.separator") + "-End");
 
-            channel.writeAndFlush("this is a string");
             while (true) {
                 String line = br.readLine();
                 if (null != line && line.equals("exit"))
                     break;
-                channel.writeAndFlush(line);
+                channel.writeAndFlush(Unpooled.copiedBuffer(line + System.getProperty("line.separator"), CharsetUtil.UTF_8));
             }
         } finally {
             group.shutdownGracefully();
