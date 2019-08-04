@@ -36,7 +36,7 @@ public class ChatServerHandler extends SimpleChannelInboundHandler<String> {
         Channel inComing = ctx.channel();
         System.out.println("channelRead0");
         for (Channel channel : channels) {
-            if (channel != inComing)
+            if (channels.contains(inComing))
                 channel.writeAndFlush("[" + inComing.localAddress() + "]" + msg + "\n");
 //            channel.writeAndFlush()
         }
