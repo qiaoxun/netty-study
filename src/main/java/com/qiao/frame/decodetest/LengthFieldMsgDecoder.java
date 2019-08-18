@@ -1,4 +1,4 @@
-package com.qiao.frame.lengthfield;
+package com.qiao.frame.decodetest;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -48,25 +48,10 @@ public class LengthFieldMsgDecoder extends LengthFieldBasedFrameDecoder {
             return null;
         }
         int readableBytes = in.readableBytes();
-        // check if the message's size is larger then head size
-        if (readableBytes < HEAD_SIZE) {
-            throw new RuntimeException("readable bytes can not be less then HEAD_SIZE " + HEAD_SIZE);
-        }
 
-        type = in.readByte();
-        flag = in.readByte();
-        length = in.readInt();
+        // 如果不读 in 中的数据，下次执行这个方法，in 里面上次传过来的数据还在
+        System.out.println("readableBytes is : " + readableBytes);
 
-        readableBytes = in.readableBytes();
-        if (readableBytes != length) {
-            throw new RuntimeException("The message's length in header is " + length + ", but the message's real length is " + readableBytes);
-        }
-
-        ByteBuf messageBuf = in.readBytes(length);
-        String body = messageBuf.toString(CharsetUtil.UTF_8);
-
-        LengthFieldMsg lengthFieldMsg = new LengthFieldMsg(type, flag, length, body);
-
-        return lengthFieldMsg;
+        return null;
     }
 }
